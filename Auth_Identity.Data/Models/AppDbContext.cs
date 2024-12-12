@@ -1,11 +1,10 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System.Runtime.CompilerServices;
 
-namespace Auth_Identity.Api.Models;
+namespace Auth_Identity.Data.Models;
 
-public class AppDbContext : IdentityDbContext<IdentityUser>  
+public class AppDbContext : IdentityDbContext<ApplicationUser> 
 {
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {

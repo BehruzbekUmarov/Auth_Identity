@@ -3,7 +3,9 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Auth_Identity.Api.Migrations
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
+namespace Auth_Identity.Data.Migrations
 {
     /// <inheritdoc />
     public partial class InitialDb : Migration
@@ -30,6 +32,8 @@ namespace Auth_Identity.Api.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    RefreshToken = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    RefreshTokenExpiry = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -154,6 +158,16 @@ namespace Auth_Identity.Api.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+                values: new object[,]
+                {
+                    { "94df2998-f2b2-4d7a-bbbc-2ace639f8c3b", "3", "HR", "HR" },
+                    { "e8aa9ccd-99ca-4e11-a370-2e4eaafc99c0", "1", "Admin", "Admin" },
+                    { "f45cef15-f216-4b31-98f5-70fc30ad6fc6", "2", "User", "User" }
                 });
 
             migrationBuilder.CreateIndex(
