@@ -19,11 +19,6 @@ public class EmailService : IEmailService
         Send(emailMessage);
     }
 
-    private void Send(object emailMessage)
-    {
-        throw new NotImplementedException();
-    }
-
     private MimeMessage CreateEmailMessage(Message message)
     {
         var emailMessage = new MimeMessage();

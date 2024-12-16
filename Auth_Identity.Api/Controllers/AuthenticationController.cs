@@ -92,7 +92,7 @@ namespace Auth_Identity.Api.Controllers
             {
                 var user = loginOtpResponse.Response.User;
 
-                if (user.TwoFactorEnabled)
+                if (user.TwoFactorEnabled && user != null && await _userManager.CheckPasswordAsync(user, loginModel.Password))
                 {
                     var token = loginOtpResponse.Response.Token;
                     var message = new Message(new string[] { user.Email! }, "Otp Confirmation", token);
@@ -100,46 +100,15 @@ namespace Auth_Identity.Api.Controllers
 
                     return StatusCode(StatusCodes.Status200OK,
                         new Models.Response {IsSuccess = loginOtpResponse.IsSuccess, Status = "Success", Message = $"We have sent an OTP to your email {user.Email}" });
-                } 
-                if (user != null && await _userManager.CheckPasswordAsync(user, loginModel.Password) && user.EmailConfirmed is not false)
-                {
-
-                    var serviceResponse = await _userManagement.GetJwtTokenAsync(user);
-                    return Ok(serviceResponse);
-                //    var authCalims = new List<Claim>
-                //{
-                //    new Claim(ClaimTypes.Name, user.UserName),
-                //    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-                //};
-
-                //    var userRoles = await _userManager.GetRolesAsync(user);
-                //    foreach (var role in userRoles)
-                //    {
-                //        authCalims.Add(new Claim(ClaimTypes.Role, role));
-                //    }
-
-                //    //if (user.TwoFactorEnabled)
-                //    //{
-                //    //    await _signInManager.SignOutAsync();
-                //    //    await _signInManager.PasswordSignInAsync(user, loginModel.Password, false, true);
-                //    //    var token = await _userManager.GenerateTwoFactorTokenAsync(user, "Email");
-                //    //    var message = new Message(new string[] { user.Email! }, "Otp Confirmation", token);
-                //    //    _emailService.SendEmail(message);
-
-                //    //    return StatusCode(StatusCodes.Status200OK,
-                //    //        new Response { Status = "Success", Message = $"We have sent an OTP to your email {user.Email}" });
-                //    //}
-
-                //    var jwtToken = GetToken(authCalims);
-
-                //    return Ok(new
-                //    {
-                //        token = new JwtSecurityTokenHandler().WriteToken(jwtToken),
-                //        expiration = jwtToken.ValidTo
-                //    });
                 }
+                //if (user != null && await _userManager.CheckPasswordAsync(user, loginModel.Password) && user.EmailConfirmed is not false)
+                //{
+
+                //    var serviceResponse = await _userManagement.GetJwtTokenAsync(user);
+                //    return Ok(serviceResponse);
+                //}
             }
-            
+
 
             return Unauthorized();
         }
@@ -157,25 +126,6 @@ namespace Auth_Identity.Api.Controllers
 
                     var serviceResponse = await _userManagement.GetJwtTokenAsync(user);
                     return Ok(serviceResponse);
-                    //    var authCalims = new List<Claim>
-                    //{
-                    //    new Claim(ClaimTypes.Name, user.UserName),
-                    //    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-                    //};
-
-                    //    var userRoles = await _userManager.GetRolesAsync(user);
-                    //    foreach (var role in userRoles)
-                    //    {
-                    //        authCalims.Add(new Claim(ClaimTypes.Role, role));
-                    //    }
-
-                    //    var jwtToken = GetToken(authCalims);
-
-                    //    return Ok(new
-                    //    {
-                    //        token = new JwtSecurityTokenHandler().WriteToken(jwtToken),
-                    //        expiration = jwtToken.ValidTo
-                    //    });
                 }                
             }
 
